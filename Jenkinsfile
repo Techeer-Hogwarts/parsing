@@ -96,28 +96,10 @@ pipeline {
         }
         success {
             echo 'Build and deployment successful!'
-            script {
-                def commitStatus = [
-                    description: "Build succeeded",
-                    state: "success",
-                    target_url: env.BUILD_URL,
-                    context: "ci-status"
-                ]
-                githubCommitStatus(commitStatus)
-            }
             slackSend message: "Build deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", color: 'good'
         }
         failure {
             echo 'Build or deployment failed.'
-            script {
-                def commitStatus = [
-                    description: "Build failed",
-                    state: "failure",
-                    target_url: env.BUILD_URL,
-                    context: "ci-status"
-                ]
-                githubCommitStatus(commitStatus)
-            }
             slackSend failOnError: true, message: "Build failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", color: 'danger'
         }
     }
